@@ -22,6 +22,6 @@ from server.apps.chatapath import urls as chatapath_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include(auth_urls)),
-    path("", include(chatapath_urls)),
+    path("auth/", include(auth_urls)),
+    path("chat/", include(chatapath_urls)),
 ]
