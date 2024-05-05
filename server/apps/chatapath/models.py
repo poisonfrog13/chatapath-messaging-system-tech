@@ -8,10 +8,10 @@ from server.apps.authentication.models import ChatUser
 
 class Message(models.Model):
     sender = models.ForeignKey(
-        ChatUser, on_delete=models.CASCADE, related_name="message_from"
+        ChatUser, on_delete=models.CASCADE, related_name="sent_messages"
     )
     recipient = models.ForeignKey(
-        ChatUser, on_delete=models.CASCADE, related_name="message_to"
+        ChatUser, on_delete=models.CASCADE, related_name="recieved_messages"
     )
     subject = models.CharField(max_length=100)
     content = models.TextField()
