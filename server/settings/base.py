@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "drf_spectacular",
     "phonenumber_field",
+    "rest_framework",
+    "rest_framework.authtoken",
     "server.apps.authentication",
     "server.apps.chatapath",
     "django.contrib.admin",
@@ -57,6 +59,11 @@ ROOT_URLCONF = "server.urls"
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ],
 }
 
 TEMPLATES = [

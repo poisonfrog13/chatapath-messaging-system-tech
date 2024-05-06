@@ -17,8 +17,8 @@ class ChatUserFactory(factory.django.DjangoModelFactory):
 
     username = factory.Faker("name")
     email = factory.Faker("ascii_email")
-    phone_number = factory.Faker("msisdn")
-    password = "password"
+    phone_number = "+44 7468 345579"
+    password = factory.Faker("sha256")
 
 
 class MessageFactory(factory.django.DjangoModelFactory):

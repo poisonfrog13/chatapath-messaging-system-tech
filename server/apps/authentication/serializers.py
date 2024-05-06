@@ -21,4 +21,4 @@ class ChatUserSerializer(serializers.ModelSerializer):
         model = ChatUser
         fields = ("id", "username", "phone_number")
 
-    phone_number = PhoneNumberField()
+    phone_number = PhoneNumberField(required=True)

@@ -13,5 +13,7 @@ class AllMessagesSerializer(serializers.ModelSerializer):
     recipient = ChatUserSerializer()
 
 
-# - We can store external informatkion in the serializer using the context kwarg
-# -
+class CreateMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = "__all__"
