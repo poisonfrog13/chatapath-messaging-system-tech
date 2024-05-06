@@ -17,7 +17,7 @@ from server.settings.base import *
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-ALLOWED_HOSTS = ["https://chatapath-1708ff5364f8.herokuapp.com/"]
+ALLOWED_HOSTS = ["chatapath-1708ff5364f8.herokuapp.com"]
 
 DEBUG = False
 
