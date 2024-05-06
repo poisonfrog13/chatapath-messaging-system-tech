@@ -17,3 +17,14 @@ class CreateMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = "__all__"
+
+    def validate_sender(self, value):
+        """check user is sender"""
+
+        user = self.context.get("user")
+        if user != value:
+            raise serializers.ValidationError(
+                "forbidden, can not send messages as another user"
+            )
+
+        return value

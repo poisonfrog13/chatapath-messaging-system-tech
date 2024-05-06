@@ -43,7 +43,9 @@ class MessagesList(APIView):
         )
 
     def post(self, request, format=None):
-        serializer = CreateMessageSerializer(data=request.data)
+        serializer = CreateMessageSerializer(
+            data=request.data, context={"user": request.user}
+        )
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
