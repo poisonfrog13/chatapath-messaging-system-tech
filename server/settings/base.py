@@ -32,6 +32,11 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "drf_spectacular",
+    "phonenumber_field",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "server.apps.authentication",
+    "server.apps.chatapath",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -42,6 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    # "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -54,6 +60,11 @@ ROOT_URLCONF = "server.urls"
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ],
 }
 
 TEMPLATES = [
@@ -81,7 +92,7 @@ WSGI_APPLICATION = "server.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": BASE_DIR.parent / "db.sqlite3",
     }
 }
 
@@ -122,7 +133,10 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = "authentication.ChatUser"

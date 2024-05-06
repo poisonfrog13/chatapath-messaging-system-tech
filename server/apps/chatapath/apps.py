@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class ChatapathConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'chatapath'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "server.apps.chatapath"
