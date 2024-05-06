@@ -38,3 +38,5 @@ DATABASES = {
         "PORT": os.environ.get("DB_PORT"),
     }
 }
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
