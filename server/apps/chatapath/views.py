@@ -59,6 +59,8 @@ class MessageDetail(APIView):
         allowed = message.sender == request.user or message.recipient == request.user
 
         if allowed:
+            message.is_unread = False
+            message.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)

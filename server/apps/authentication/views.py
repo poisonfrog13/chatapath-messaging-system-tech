@@ -55,7 +55,7 @@ def login(request):
             "user": serializer.data,
             "message": "You successfully have been logged in",
         },
-        status=status.HTTP_201_CREATED,
+        status=status.HTTP_200_OK,
     )
 
 
@@ -74,4 +74,4 @@ def logout(request):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def test_token(request):
-    return Response("you passed the test for user{}".format(request.user.username))
+    return Response("you passed the test for user {}".format(request.user.username))
