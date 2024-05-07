@@ -1,0 +1,484 @@
+{
+	"info": {
+		"_postman_id": "ada7fef1-d8a5-4804-80cb-797f9cd8cfe7",
+		"name": "Chatapath - Messaging System",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\nBefore starting automated testing within 'abra_chatapath' environment, ensure that the file 'abra__olena_gut.postman_environment' is imported.\n\nThen follow the steps provided below to 'activate' an environment as shown in the pictures:\n\n<img src=\"https://content.pstmn.io/c5d234d4-28ab-4248-aed2-5774b606f52a/aW1hZ2UucG5n\" width=\"661\" height=\"188\">\n\n<img src=\"https://content.pstmn.io/5658a242-d1d5-49e3-b534-4e4a1d2b1b1a/aW1hZ2UucG5n\" width=\"316\" height=\"293\">\n\n<img src=\"https://content.pstmn.io/dc731ce9-d255-4074-b9e1-a1801cb8304b/aW1hZ2UucG5n\" width=\"290\" height=\"257\">\n\nTo ensure smooth testing of all APIs, follow the specified order and authentication procedure:\n\n1. **Sign Up**: Create a new user account using the POST Sign Up endpoint. While using an already existing user, such as the admin, is recommended for easier testing with existing data, you can create a new user if necessary. Note that using a new user may require manual intervention for certain operations, like composing a message.\n    \n2. **Log In**: After signing up or using existing credentials, authenticate with the username and password to obtain a token for accessing protected endpoints.\n    \n3. Proceed to test the remaining APIs, ensuring authentication is maintained throughout the testing process.\n    \n\nWhen creating a new user via the Sign Up endpoint, use the generated username for logging in to maintain consistency and avoid authentication errors. Upon successful login, you'll receive a response containing the ID of the newly created user. It's crucial to utilize this ID when making subsequent requests, such as composing a message using the POST Write Message endpoint. Providing the correct user ID ensures that the message is associated with the correct user account and helps prevent potential data handling errors.\n\nBy adhering to this streamlined process and environment setup, you ensure proper authentication for accessing APIs requiring login credentials and facilitate seamless automation of the testing process.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32326909",
+		"_collection_link": "https://cloudy-crescent-961361.postman.co/workspace/CHECKCHECK~f983b66c-43fd-4cc2-abc0-8a87245b5822/collection/32326909-ada7fef1-d8a5-4804-80cb-797f9cd8cfe7?action=share&source=collection_link&creator=32326909"
+	},
+	"item": [
+		{
+			"name": "Log In",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"console.log(response.token)\r",
+							"pm.environment.set(\"TOKEN\", response.token);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"abra-admin\",\r\n    \"password\": \"abra\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/auth/login",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				},
+				"description": "This POST request is used for logging in with a username and password, as shown in the example below:\n\n``` json\n{\n    \"username\": \"abra-admin\",\n    \"password\": \"abra\"\n}\n\n ```\n\nIf authentication is successful, the response will include information about the user and a generated token, as shown in the example below:\n\n``` json\n{\n    \"token\": \"021784a94ae8d092191f6bb78527d049315383f5\",\n    \"user\": {\n        \"id\": 1,\n        \"username\": \"abra-admin\",\n        \"phone_number\": \"+972585238751\"\n    },\n    \"message\": \"You successfully have been logged in\"\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "Test Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/auth/test_token",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"auth",
+						"test_token"
+					]
+				},
+				"description": "This is a GET request used to test a provided Django token and retrieve information about the successfully authenticated user.\n\nA successful response will include a message containing the name of the authenticated user. For example:\n\n``` json\n\"you passed the test for user abra-admin\"\n\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "Write a Message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{       \"sender\": 1,\r\n        \"recipient\": 12,\r\n        \"subject\": \"{{$randomLoremSentence}}\",\r\n        \"content\": \"{{$randomLoremSentence}}\"\r\n    }\r\n\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/chat/",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"chat",
+						""
+					]
+				},
+				"description": "This is a POST request used for composing a new message. It requires providing the sender and recipient IDs manually, while the remaining data is generated by POSTMAN, as shown in the example below:"
+			},
+			"response": []
+		},
+		{
+			"name": "All Messages",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"",
+							"",
+							"const message_id = response[0].id",
+							"const message_delete = response[0].id",
+							"",
+							"console.log(message_id)",
+							"console.log(message_delete)",
+							"",
+							"pm.environment.set(\"MESSAGE_ID\", message_id);",
+							"pm.environment.set(\"MESSAGE_ID__DELETE\", message_delete);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/chat/",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"chat",
+						""
+					]
+				},
+				"description": "This is a GET request used to retrieve a list of all messages for the user, either as a recipient or as a sender.\n\nA successful GET response will return a list of messages, each containing information such as the message ID, sender details, recipient details, subject, content, date, and whether the message is unread or not."
+			},
+			"response": []
+		},
+		{
+			"name": "All Unread Messages",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/chat/?is_unread=true",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"chat",
+						""
+					],
+					"query": [
+						{
+							"key": "is_unread",
+							"value": "true"
+						}
+					]
+				},
+				"description": "This is a GET request used to retrieve a list of all unread messages for the user as a recipient. To see all unread messages, it's necessary to provide query parameters ?is_unread=true  \n\nA successful GET response will return a list of messages, each containing information, as shown in the example below:\n\n``` json\n[\n{\n        \"id\": 51,\n        \"sender\": {\n            \"id\": 27,\n            \"username\": \"Caterina\",\n            \"phone_number\": \"+447437901925\"\n        },\n        \"recipient\": {\n            \"id\": 1,\n            \"username\": \"abra-admin\",\n            \"phone_number\": \"+972585238751\"\n        },\n        \"subject\": \"Dolorem sed necessitatibus eos incidunt ea quas et quidem.\",\n        \"content\": \"Placeat velit blanditiis adipisci eaque labore harum.\",\n        \"date\": \"2024-05-06T23:24:54.019938Z\",\n        \"is_unread\": true\n    },\n     {\n        \"id\": 52,\n        \"sender\": {\n            \"id\": 27,\n            \"username\": \"Caterina\",\n            \"phone_number\": \"+447437901925\"\n        },\n        \"recipient\": {\n            \"id\": 1,\n            \"username\": \"abra-admin\",\n            \"phone_number\": \"+972585238751\"\n        },\n        \"subject\": \"Inventore voluptatum ipsa aliquam ipsum rerum quia optio reiciendis sit.\",\n        \"content\": \"Voluptas et occaecati nisi dolore corporis vel dolorum dolores.\",\n        \"date\": \"2024-05-06T23:24:55.059777Z\",\n        \"is_unread\": true\n    }\n]\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "Read One Message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/chat/:MESSAGE_ID",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"chat",
+						":MESSAGE_ID"
+					],
+					"variable": [
+						{
+							"key": "MESSAGE_ID",
+							"value": "{{MESSAGE_ID}}"
+						}
+					]
+				},
+				"description": "This is a GET request used to retrieve one specific message. The 'id' is automatically provided and assigned to the path variable.\n\nA successful GET response will have a 200 OK status and return a message containing information, as shown in the example below:  \n\n``` json\n{\n    \"id\": 16,\n    \"sender\": {\n        \"id\": 9,\n        \"username\": \"Toni\",\n        \"phone_number\": \"+447437901925\"\n    },\n    \"recipient\": {\n        \"id\": 1,\n        \"username\": \"abra-admin\",\n        \"phone_number\": \"+972585238751\"\n    },\n    \"subject\": \"In omnis beatae aut.\",\n    \"content\": \"Sint ut saepe autem sapiente.\",\n    \"date\": \"2024-05-06T20:04:18.476349Z\",\n    \"is_unread\": false\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete One Message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/chat/:message_delete",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"chat",
+						":message_delete"
+					],
+					"variable": [
+						{
+							"key": "message_delete",
+							"value": "{{MESSAGE_ID__DELETE}}"
+						}
+					]
+				},
+				"description": "The DELETE request is used to delete one specific message. The 'id' is a value assigned to the path variable and provided automatically. A successful DELETE request typically returns a 204 No Content response code."
+			},
+			"response": []
+		},
+		{
+			"name": "Log Out",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/auth/logout",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				},
+				"description": "This is a GET request used for logging out. If the user is authenticated, a successful GET response will have a 200 OK status and return the message:\n\n``` json\n{ \"message\": \"You successfully have been logged out\" }\n\n ```\n\nIf the user is not authenticated, the GET response will return a 401 Unauthorized status and the message:\n\n``` json\n{ \"detail\": \"Invalid token.\"}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "Sign Up",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"{{$randomFirstName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"password\": \"123456\",\r\n    \"phone_number\": \"+447437901925\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/auth/signup",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				},
+				"description": "This is a POST request used for submitting data to an API via the request body. The request body for this POST request includes the following JSON data:\n\n``` json\n{\n    \"username\": \"Ashlynn\",\n    \"email\": \"Nathanael31@yahoo.com\",\n    \"password\": \"123456\",\n    \"phone_number\": \"+447437901925\"\n}\n\n ```\n\nA successful POST request returns`201 Created` response code and a generated token for a new user. For example:\n\n``` json\n{    \n\"token\": \"d2de9491f84ae26c48370f6922490eb432b62295\",   \n\"user\":\n{ \"username\": \"Caterina\", \n\"email\": \"Kyler.Kuphal@gmail.com\",\n\"password\": \"123456\", \n\"phone_number\": \"+447437901925\"  }\n}\n\n ```"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://postman-rest-api-learner.glitch.me/"
+		}
+	]
+}
