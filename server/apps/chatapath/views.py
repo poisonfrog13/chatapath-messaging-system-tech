@@ -34,13 +34,13 @@ class MessagesList(APIView):
             else (Q(sender=request.user.id) | Q(recipient=request.user.id))
         )
 
-        all_messages = Message.objects.filter(query)
-        serializer = AllMessagesSerializer(all_messages, many=True)
+        try:
+            all_messages = Message.objects.filter(query)
+        except Message.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-        return Response(
-            serializer.data,
-            status=status.HTTP_200_OK if all_messages else status.HTTP_204_NO_CONTENT,
-        )
+        serializer = AllMessagesSerializer(all_messages, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
         serializer = CreateMessageSerializer(
