@@ -22,6 +22,8 @@ By adhering to this streamlined process and environment setup, you ensure proper
 | ------------- | ------------- |------------- | ------------- |
 |/chat/messages| GET | <p>200 – returns a list of messages;<br> 403 – user isn’t authorised<p> | Return all messages|
 |/chat/messages?is_unread=true| GET | <p>200 – returns a list of messages;<br> 403 – user isn’t authorised<p> | By default unread=False; if unread=True → return unread messages|
+|/chat/messages?transaction=incoming| GET | <p>200 – returns a list of incoming messages;<br> 403 – user isn’t authorised<p> | Returns all incoming messages of the user|
+|/chat/messages?transaction=outgoing| GET | <p>200 – returns a list of outgoing messages;<br> 403 – user isn’t authorised<p> | Returns all outgoing messages of the user|
 |/chat/messages| POST | <p>201 – a message is written/created;<br> 400 – forbidden user/invalid data;<br> 403 – user isn’t authorised<p> | Write and send a new message |
 |/chat/messages/{{int:message_pk}}| GET | <p>200 – returns the message;<br> 403 – user isn’t authorised;<br> 404 – a message doesn’t exist<p> | Read one specific message |
 |/chat/messages/{{int:message_pk}}| DELETE | <p>204 – no content (empty string) → a message has been deleted;<br> 403 – user isn’t authorised;<br> 404 – a message doesn’t exist<p> | Delete a specific message |
