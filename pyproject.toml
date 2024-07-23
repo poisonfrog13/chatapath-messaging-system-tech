@@ -18,8 +18,14 @@ faker = "^25.0.1"
 gunicorn = "^22.0.0"
 psycopg2 = "^2.9.9"
 psycopg2-binary = "^2.9.9"
-whitenoise = "^6.6.0"
+django-filter = "^24.2"
+pytest-django = "^4.8.0"
+pytest-factoryboy = "^2.7.0"
 
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "server.settings.base"
+python_files = "test_*.py"
+testpaths = ["server"]
 
 [build-system]
 requires = ["poetry-core"]
