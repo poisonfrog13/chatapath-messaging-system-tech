@@ -11,27 +11,8 @@ class CreateMessageSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class AllMessagesListSerializer(serializers.ListSerializer):
-    @property
-    def incoming(self):
-        return [item for item in self.data if item["transaction"] == "incoming"]
-
-    @property
-    def outgoing(self):
-        return [item for item in self.data if item["transaction"] == "outgoing"]
-
-    @property
-    def seen(self):
-        return [item for item in self.data if item["is_unread"] == False]
-
-    @property
-    def is_unread(self):
-        return [item for item in self.data if item["is_unread"] == True]
-
-
 class AllMessagesSerializer(serializers.ModelSerializer):
     class Meta:
-        list_serializer_class = AllMessagesListSerializer
         model = Message
         fields = "__all__"
 

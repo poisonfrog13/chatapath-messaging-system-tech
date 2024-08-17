@@ -23,14 +23,9 @@ from server.apps.chatapath.serializers import (
 
 
 class MessagesList(APIView):
-    # class MessagesList(generics.ListAPIView):
 
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
-
-    # queryset = Message.objects.all()
-    # serializer_class = AllMessagesSerializer
-    # filterset_fields = ["is_unread", "recipient", "sender"]
 
     def get(self, request, format=None):
         """Retrieve all messages where the user is the sender or the recipient;
@@ -43,31 +38,30 @@ class MessagesList(APIView):
         only__incoming = self.request.query_params.get("transaction") == "incoming"
         only__outgoing = self.request.query_params.get("transaction") == "outgoing"
 
-        all_messages = Message.objects.filter(
-            (Q(sender=request.user.id) | Q(recipient=request.user.id))
-        )
+        if only__incoming:
+            query__transaction = Q(recipient=request.user.id)
+        elif only__outgoing:
+            query__transaction = Q(sender=request.user.id)
+        else:
+            query__transaction = Q(sender=request.user.id) | Q(
+                recipient=request.user.id
+            )
+
+        if only__unread:
+            query__status = Q(is_unread=True)
+        elif only__seen:
+            query__status = Q(is_unread=False)
+        else:
+            query__status = Q(is_unread=True) | Q(is_unread=False)
+
+        all_messages = Message.objects.filter(query__transaction, query__status)
 
         serializer = AllMessagesSerializer(
             all_messages, many=True, context={"user": request.user}
         )
 
-        if only__incoming:
-            serializer = serializer.incoming
-
-        elif only__outgoing:
-            serializer = serializer.outgoing
-
-        elif only__unread:
-            serializer = serializer.is_unread
-
-        elif only__seen:
-            serializer = serializer.seen
-
-        else:
-            serializer = serializer.data
-
         return Response(
-            serializer,
+            serializer.data,
             status=(status.HTTP_200_OK if all_messages else status.HTTP_204_NO_CONTENT),
         )
 
